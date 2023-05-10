@@ -30,3 +30,8 @@ html {
     width: 110px;
     height: 15px;
 }
+
+.allertMessage{
+    color: red;
+    font-size: 1.4em;
+}

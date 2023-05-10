@@ -65,22 +65,31 @@ namespace WebApplication4.Controllers
 
         [HttpPost]
         [Route("AddUser")]
-        public async Task<IActionResult> AddUser(string json) 
+        public async Task<IActionResult> AddUser([FromForm] NewUserViewModel model) 
         {
-            var model = JsonConvert.DeserializeObject<NewUserViewModel>(json);
+            //var model = JsonConvert.DeserializeObject<NewUserViewModel>(json.ToString());
             string date = DateTime.Now.ToString("yyyy-MM-dd");
-            var user = new UserAcc
+            var userExist = _users.UserAccs.First(u => u.Login == model.Login);
+            if (userExist != null)
             {
-                Id = _users.UserAccs.Select(u => u.Id).Max() + 1,
-                Login = model.Login,
-                Password = model.Password,
-                CreatedDate = DateOnly.FromDateTime(DateTime.Parse(date)),
-                UserGroupId = 2,
-                UserStateId = 1
-            };
+                ViewBag.Message = "User with this login already exist";
+                return View("~/Views/Users/NewUser.cshtml");
+            }
+            else 
+            {
+                var user = new UserAcc
+                {
+                    Id = _users.UserAccs.Select(u => u.Id).Max() + 1,
+                    Login = model.Login,
+                    Password = model.Password,
+                    CreatedDate = DateOnly.FromDateTime(DateTime.Parse(date)),
+                    UserGroupId = 2,
+                    UserStateId = 1
+                };
             _users.UserAccs.Add(user);
             await _users.SaveChangesAsync();
             return RedirectToAction("NewUser", "Users");
+            }
         }
 
         [HttpGet]
