@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "MainLayout";
+}
+
+
+@using Newtonsoft.Json;
+@using WebApplication4.Models;
+@using WebApplication4;
+@using WebApplication4.ViewModels;
+@{
+    <div>
+        <a href="@Url.Action("NewUser", "Users")">
+            Add user
+        </a>
+    </div>
+    var users = JsonConvert.DeserializeObject<List<UserAcc>>(Model);
+    foreach (var i in users)
+    {
+        <div class="User">
+            <div class="UserInfo">
+                <ul>
+                    <li>Id: @i.Id</li>
+                    <li>Login: @i.Login</li>
+                    <li>Password: @i.Password</li>
+                    <li>Created date: @i.CreatedDate</li>
+                    <li>Group: @i.UserGroup</li>
+                    <li>State: @i.UserState</li>
+                </ul>
+            </div>
+            @if (Convert.ToString(i.UserState) != "Blocked")
+            {
+                <form method="post" action="@Url.Action("DeleteUser", "Users", new{id = i.Id})">
+                    <button type="submit">Delete user</button>
+                </form>
+            }
+            @if(Convert.ToString(i.UserState) != "Active")
+            {
+                <form method="post" action="@Url.Action("RestoreUser", "Users", new{id = i.Id})">
+                    <button type="submit">Restore user</button>
+                </form>
+            }
+        </div>
+    }
+
+}
+
+

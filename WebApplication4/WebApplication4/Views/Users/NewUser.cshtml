@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "MainLayout";
+}
+
+@using Newtonsoft.Json;
+@using System.Net.Http.Headers;
+@using System.Text;
+@using WebApplication4.ViewModels;
+<div class="userAdd">
+    <div class="newUserInfo">
+        @model NewUserViewModel
+        <form method="post" action="@Url.Action("AddUser", "Users")">
+            <label>Login</label>
+            <div>
+                <input type="text" name="Login" class="newUser" />
+            </div>
+            <label>Password</label>
+            <div>
+                <input type="text" name="Password" class="newUser" />
+            </div>
+            <label>Confirm password</label>
+            <div>
+                <input type="text" name="ConfirmPassword" class="newUser" />
+            </div>
+            @{
+                using var client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var json = JsonConvert.SerializeObject(Model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+            <input type="hidden" name="json" value="@Html.Raw(JsonConvert.SerializeObject(Model))" />
+            <button class="addBtn" type="submit">Add user</button>
+        </form>
+    </div>
+</div>
