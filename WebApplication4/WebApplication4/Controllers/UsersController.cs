@@ -69,7 +69,7 @@ namespace WebApplication4.Controllers
         {
             //var model = JsonConvert.DeserializeObject<NewUserViewModel>(json.ToString());
             string date = DateTime.Now.ToString("yyyy-MM-dd");
-            var userExist = _users.UserAccs.First(u => u.Login == model.Login);
+            var userExist = _users.UserAccs.FirstOrDefault(u => u.Login == model.Login);
             if (userExist != null)
             {
                 ViewBag.Message = "User with this login already exist";
